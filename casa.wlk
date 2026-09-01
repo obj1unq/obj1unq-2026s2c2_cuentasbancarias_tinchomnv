@@ -52,36 +52,64 @@ object cuentaGastosMantenimiento {
 object cuentaCombinada {
     var saldo = 0
 
-    method depositar(monto){
+    method depositar(monto) {
         cuentaPrimaria.depositar(monto)
     }
 
-    method saldo(){
-        saldo = cuentaPrimaria.saldo() + cuentaSecundaria.saldo()
+    method saldo() {
+        saldo = 0.max(cuentaPrimaria.saldo()) + 0.max(cuentaSecundaria.saldo())
         return (saldo)
+    }
+
+    method extraer(monto) {
+        self.validarSaldoCombinado(monto)
+        //Verificar si es la mejor forma de hacerlo...
+        var diferencia = cuentaPrimaria.saldo() - monto
+ 
+        if (diferencia >= 0) {
+            cuentaPrimaria.extraer(monto)
+        } else {
+            cuentaPrimaria.extraer(cuentaPrimaria.saldo())
+            cuentaSecundaria.extraer(diferencia.abs())
+        }
+        //Verificar si es la mejor forma de hacerlo...
+    }
+
+    method validarSaldoCombinado(monto) {
+        if (monto > self.saldo()){
+            self.error("El monto a extraer es superior al saldo de la cuenta combinada")
+        }
     }
 }
 
 object cuentaPrimaria {
-    var saldo = 0
+    var saldo = 300
 
-    method depositar(monto){
+    method depositar(monto) {
         saldo += monto
     }
 
-    method saldo(){
+    method saldo() {
         return (saldo)
+    }
+
+    method extraer(monto) {
+       saldo -= monto
     }
 }
 
 object cuentaSecundaria {
     var saldo = 200
 
-    method depositar(monto){
+    method depositar(monto) {
         
     }
 
-    method saldo(){
+    method saldo() {
         return (saldo)
+    }
+    
+    method extraer(monto) {
+       saldo -= monto
     }
 }
