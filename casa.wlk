@@ -28,7 +28,7 @@ object cuentaCorriente {
     }
 }
 
-object cuentaGastosMantenimiento {
+object cuentaGastosMantenimiento {  
     var dineroEnCuenta = 0 
     var costoDeOperacion = 20
     
@@ -63,15 +63,21 @@ object cuentaCombinada {
 
     method extraer(monto) {
         self.validarSaldoCombinado(monto)
+        
+        var dePrimaria = cuentaPrimaria.montoQuePuedeExtraer(monto)
+
+        cuentaPrimaria.extraer(dePrimaria)
+        cuentaSecundaria.extraer(monto - dePrimaria)
+        
         //Verificar si es la mejor forma de hacerlo...
-        var diferencia = cuentaPrimaria.saldo() - monto
+        // var diferencia = cuentaPrimaria.saldo() - monto
  
-        if (diferencia >= 0) {
-            cuentaPrimaria.extraer(monto)
-        } else {
-            cuentaPrimaria.extraer(cuentaPrimaria.saldo())
-            cuentaSecundaria.extraer(diferencia.abs())
-        }
+        // if (diferencia >= 0) {
+        //     cuentaPrimaria.extraer(monto)
+        // } else {
+        //     cuentaPrimaria.extraer(cuentaPrimaria.saldo())
+        //     cuentaSecundaria.extraer(diferencia.abs())
+        // }
         //Verificar si es la mejor forma de hacerlo...
     }
 
@@ -95,6 +101,10 @@ object cuentaPrimaria {
 
     method extraer(monto) {
        saldo -= monto
+    }
+
+    method montoQuePuedeExtraer(monto) {
+        return 0.max(saldo).min(monto)
     }
 }
 
