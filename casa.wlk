@@ -1,6 +1,8 @@
 object casa {
     var cuentaPredeterminada = cuentaCombinada
     var gastosDelMes = 0 
+    var montoReparaciones = 0
+    var porcentajeDeViveres = 0 
 
     method gasto(monto) {
         cuentaPredeterminada.extraer(monto)
@@ -10,6 +12,45 @@ object casa {
     method cambioDeMes() {
         gastosDelMes = 0
     }
+
+    method seRompio(montoReparacion) {
+        montoReparaciones += montoReparacion
+    }
+
+    method porcentajeDeViveres() {
+        return (porcentajeDeViveres)
+    }
+    
+    method comprarViveres(porcentaje, calidad) {
+        self.validarCantidadViveres(porcentaje)
+
+        porcentajeDeViveres += porcentaje
+        self.gasto(porcentaje * calidad)
+    }
+
+    method validarCantidadViveres(cantidad) {
+        if (porcentajeDeViveres + cantidad > 100) {
+            self.error("No se puede comprar tantos víveres")
+        }
+    }
+
+    method hacerReparaciones() {
+        self.gasto(montoReparaciones)
+        montoReparaciones = 0
+    }
+
+    method hayViveresSuficientes() {
+        return(porcentajeDeViveres >= 40)
+    }
+
+    method hayQueHacerReparaciones() {
+        return(montoReparaciones > 0)
+    }
+
+    method estaEnOrden() {
+        return(self.hayViveresSuficientes() && self.hayQueHacerReparaciones().negate())
+    }
+
 }
 
 // Cuenta secundaria
